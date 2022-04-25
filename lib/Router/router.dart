@@ -1,3 +1,4 @@
+import 'package:crewindemoproject/signup_details.dart';
 import 'package:crewindemoproject/signup_signin.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
@@ -12,7 +13,8 @@ class Routerr {
         return MaterialPageRoute(builder: (_) => const RegisterAndLogin());
       case '/resetPassword':
         return MaterialPageRoute(builder: (_) => const ResetPassword());
-
+      case '/signUpDetails':
+        return MaterialPageRoute(builder: (_) => const SignUpDetails());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
+
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  bool obscureText = true;
 
   @override
   Widget build(BuildContext context) {
     String failInput = "Hatalı giriş yapıldı";
-
     return Column(
       children: [
         Padding(
@@ -57,6 +63,16 @@ class SignIn extends StatelessWidget {
     return TextFormField(
       autocorrect: true,
       decoration: InputDecoration(
+          suffixIcon: IconButton(
+            icon: Icon(
+              obscureText ? Icons.visibility : Icons.visibility_off,
+            ),
+            onPressed: () {
+              setState(() {
+                obscureText = !obscureText;
+              });
+            },
+          ),
           errorText: failInput,
           filled: true,
           border: OutlineInputBorder(
@@ -64,6 +80,7 @@ class SignIn extends StatelessWidget {
               borderSide: const BorderSide(color: Colors.grey)),
           label: const Text("Password"),
           hintText: "123456abcdef"),
+      obscureText: obscureText,
     );
   }
 }

@@ -11,48 +11,56 @@ class RegisterAndLogin extends StatelessWidget {
   }
 
   Widget body(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      width: MediaQuery.of(context).size.width,
-      child: Card(
-        color: Colors.grey,
-        shape: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        child: DefaultTabController(
-            length: 2,
-            child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.white,
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(30),
+              child: Card(
                 elevation: 0,
-                bottom: const TabBar(
-                    labelColor: Colors.redAccent,
-                    unselectedLabelColor: Colors.white,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    indicator: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10)),
-                        color: Colors.white),
-                    tabs: [
-                      Tab(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Sign Up"),
+                color: Colors.grey,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: const Padding(
+                  padding: EdgeInsets.all(3.0),
+                  child: TabBar(
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.white,
+                      indicatorWeight: 2,
+                      indicatorColor: Colors.grey,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicator: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              topRight: Radius.circular(15),
+                              bottomLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(15)),
+                          color: Colors.white),
+                      tabs: [
+                        Tab(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text("Sign Up"),
+                          ),
                         ),
-                      ),
-                      Tab(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Sign In"),
+                        Tab(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text("Sign In"),
+                          ),
                         ),
-                      ),
-                    ]),
+                      ]),
+                ),
               ),
-              body: const TabBarView(children: <Widget>[
-                SignUp(),
-                SignIn(),
-              ]),
-            )),
-      ),
-    );
+            ),
+          ),
+          body: const TabBarView(children: <Widget>[
+            SignUp(),
+            SignIn(),
+          ]),
+        ));
   }
 }
