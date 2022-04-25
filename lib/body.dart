@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
@@ -7,15 +8,19 @@ class Body extends StatelessWidget {
       const TextStyle(fontStyle: FontStyle.italic, fontSize: 18);
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        makeImage(),
-        appDescription(),
-        continueWithEmail(context),
-        continueWithoutSigningUp(),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          makeImage(),
+          appDescription(),
+          continueWithEmail(context),
+          continueWithoutSigningUp(),
+        ],
+      ),
     );
   }
+
+  
 
   Align continueWithoutSigningUp() {
     return Align(

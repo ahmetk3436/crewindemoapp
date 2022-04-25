@@ -71,9 +71,11 @@ class _SignUpState extends State<SignUp> {
   }
 
   Color changeBackground() {
-    if (textEditingControllerEmail.text.isNotEmpty &&
-        textEditingControllerPassword.text.isNotEmpty &&
-        textEditingControllerRePassword.text.isNotEmpty) {
+    if ((textEditingControllerEmail.text.isNotEmpty &&
+            textEditingControllerPassword.text.isNotEmpty &&
+            textEditingControllerRePassword.text.isNotEmpty) &&
+        (textEditingControllerPassword.text ==
+            textEditingControllerRePassword.text)) {
       return Colors.blue;
     } else {
       return Colors.grey;

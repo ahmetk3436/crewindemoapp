@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'model/user.dart';
 
 class SignUpDetails extends StatefulWidget {
   const SignUpDetails({Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
   final _controller = PageController(viewportFraction: 0.8, keepPage: true);
   Color femaleColor = Colors.grey;
   Color maleColor = Colors.grey;
+  String userGender = "";
   int activeIndex = 0;
   int _currentAge = 18;
   int _currentWeight = 50;
@@ -24,62 +28,89 @@ class _SignUpDetailsState extends State<SignUpDetails> {
         centerTitle: true,
         title: const Text("KAYDOL"),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 500,
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  switch (index) {
-                    case 0:
-                      return pages1();
-                    case 1:
-                      return pages2();
-                    case 2:
-                      return pages3();
-                    case 3:
-                      return pages4();
-                    default:
-                      return pages1();
-                  }
-                },
-                onPageChanged: (index) {
-                  setState(() {
-                    activeIndex = index;
-                  });
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _controller.nextPage(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.ease);
-                        });
-                      },
-                      child: const Text("NEXT"))),
-            ),
-            Padding(
-                padding: const EdgeInsets.only(bottom: 15.0),
-                child: SmoothPageIndicator(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 500,
+                child: PageView.builder(
                   controller: _controller,
-                  count: 4,
-                  effect: const WormEffect(),
-                  onDotClicked: (index) {},
-                )),
-          ],
+                  itemCount: 4,
+                  itemBuilder: (context, index) {
+                    switch (index) {
+                      case 0:
+                        return pages1();
+                      case 1:
+                        return pages2();
+                      case 2:
+                        return pages3();
+                      case 3:
+                        return pages4();
+                      default:
+                        return pages1();
+                    }
+                  },
+                  onPageChanged: (index) {
+                    setState(() {
+                      activeIndex = index;
+                    });
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          if (_controller.page == 3) {
+                            registerFirebase();
+                          } else {
+                            _controller.nextPage(
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          }
+                        },
+                        child: const Text("NEXT"))),
+              ),
+              Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: SmoothPageIndicator(
+                    controller: _controller,
+                    count: 4,
+                    effect: const WormEffect(),
+                    onDotClicked: (index) {},
+                  )),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void registerFirebase() async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      await auth
+          .createUserWithEmailAndPassword(
+              email: user.first.email, password: user.first.password);
+      userDetails.add(UserDetails(
+          height: _currentHeight,
+          weight: _currentWeight,
+          age: _currentAge,
+          gender: userGender));
+      Navigator.pushNamed(context, "/mainMenu");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget pages1() {
@@ -96,7 +127,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
             child: Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 30.0),
+                  padding: const EdgeInsets.only(left: 5.0),
                   child: Column(
                     children: [
                       Card(
@@ -110,6 +141,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                           ),
                           onPressed: () {
                             setState(() {
+                              userGender = "MALE";
                               femaleColor = Colors.grey;
                               maleColor = Colors.black;
                             });
@@ -135,6 +167,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                         ),
                         onPressed: () {
                           setState(() {
+                            userGender = "FEMALE";
                             femaleColor = Colors.black;
                             maleColor = Colors.grey;
                           });
@@ -173,7 +206,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
           ),
           Text(
             'Yaşınız : $_currentAge',
-            style: TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20),
           ),
         ],
       ),
@@ -196,7 +229,8 @@ class _SignUpDetailsState extends State<SignUpDetails> {
               })
             },
           ),
-          Text('Kilonuz : $_currentWeight', style: TextStyle(fontSize: 20)),
+          Text('Kilonuz : $_currentWeight',
+              style: const TextStyle(fontSize: 20)),
         ],
       ),
     );
@@ -218,7 +252,8 @@ class _SignUpDetailsState extends State<SignUpDetails> {
               })
             },
           ),
-          Text('Boyunuz : $_currentHeight', style: TextStyle(fontSize: 20)),
+          Text('Boyunuz : $_currentHeight',
+              style: const TextStyle(fontSize: 20)),
         ],
       ),
     );
