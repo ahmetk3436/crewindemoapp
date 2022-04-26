@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
@@ -13,13 +14,14 @@ class Body extends StatelessWidget {
           makeImage(),
           appDescription(),
           continueWithEmail(context),
-          continueWithoutSigningUp(),
+          continueWithoutSigningUp(context),
         ],
       ),
     );
   }
 
-  Align continueWithoutSigningUp() {
+  Align continueWithoutSigningUp(BuildContext context) {
+    final FirebaseAuth auth = FirebaseAuth.instance;
     return Align(
       heightFactor: 2,
       alignment: Alignment.bottomCenter,
@@ -27,7 +29,10 @@ class Body extends StatelessWidget {
         elevation: 8,
         color: Colors.cyan,
         child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+              auth.signInAnonymously();
+              Navigator.pushNamed(context, "/mainMenu");
+            },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.cyan),
             ),

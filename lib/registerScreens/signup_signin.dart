@@ -15,10 +15,13 @@ class RegisterAndLogin extends StatelessWidget {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            iconTheme: const IconThemeData(
+              color: Colors.black, //change your color here
+            ),
             elevation: 0,
             backgroundColor: Colors.white,
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(30),
+              preferredSize: const Size.fromHeight(50),
               child: Card(
                 elevation: 0,
                 color: Colors.grey,

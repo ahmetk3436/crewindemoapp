@@ -1,10 +1,11 @@
-import 'package:crewindemoproject/mainMenu.dart';
+import 'package:crewindemoproject/sportsMenus/mainMenu.dart';
 import 'package:crewindemoproject/registerScreens/name.dart';
 import 'package:crewindemoproject/registerScreens/signup_details.dart';
 import 'package:crewindemoproject/registerScreens/signup_signin.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
 import '../registerScreens/resetPassword.dart';
+import '../sportsMenus/favoruiteSports.dart';
 
 class Routerr {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -22,6 +23,8 @@ class Routerr {
         return MaterialPageRoute(builder: (_) => const MainMenu());
       case '/name':
         return MaterialPageRoute(builder: (_) => const Name());
+      case '/favourites':
+        return MaterialPageRoute(builder: (_) => const FavouriteSports());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

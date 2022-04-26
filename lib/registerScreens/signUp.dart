@@ -1,5 +1,8 @@
 import 'package:crewindemoproject/services/firebase_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -10,7 +13,8 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   TextEditingController textEditingControllerEmail = TextEditingController();
-
+  final Uri _url = Uri.parse(
+      'https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
   TextEditingController textEditingControllerPassword = TextEditingController();
 
   TextEditingController textEditingControllerRePassword =
@@ -37,10 +41,26 @@ class _SignUpState extends State<SignUp> {
             child: rewritePasswordFormField(
                 failInput, textEditingControllerRePassword),
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 50.0, left: 30, right: 30),
-            child: Text(
-                "Curabitur lobortis id lorem id bibendum. Ut id consectetur magna. Terms of use augue enim, pulvinar Privacy Notice lacinia at."),
+          Padding(
+            padding: const EdgeInsets.only(top: 50.0, left: 30, right: 30),
+            child: InkWell(
+                child: Column(
+                  children: const [
+                    Text(
+                        "Curabitur lobortis id lorem id bibendum. Ut id consectetur magna.  "),
+                    Text(
+                      "Terms of use augue enim,",
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue),
+                    ),
+                    Text("pulvinar Privacy Notice lacinia at.",
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.blue)),
+                  ],
+                ),
+                onTap: () => makeUrl()),
           ),
           continueButton(context)
         ],
@@ -48,7 +68,12 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
+  void makeUrl() async {
+    await launchUrl(_url);
+  }
+
   Align continueButton(BuildContext context) {
+    changeBackgroundColor();
     return Align(
         heightFactor: 1.2,
         alignment: Alignment.bottomCenter,
@@ -60,14 +85,32 @@ class _SignUpState extends State<SignUp> {
               child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(changeBackgroundColor())),
+                          MaterialStateProperty.all(backgroundColor)),
                   onPressed: () {
-                    FirebaseAuthh authhh = FirebaseAuthh();
-                    authhh.registerFirebase(
-                        textEditingControllerEmail.text.toString(),
-                        textEditingControllerPassword.text.toString(),
-                        context);
-                    Navigator.pushNamed(context, "/name");
+                    if (textEditingControllerPassword.text ==
+                        textEditingControllerRePassword.text) {
+                      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+                      FirebaseAuthh authhh = FirebaseAuthh();
+                      try {
+                        authhh.registerFirebase(
+                            textEditingControllerEmail.text.toString(),
+                            textEditingControllerPassword.text.toString(),
+                            context);
+                      } catch (e) {
+                        Fluttertoast.showToast(msg: e.toString());
+                      }
+                      if (firebaseAuth.currentUser != null) {
+                        Navigator.pushNamed(context, "/name");
+                      } else {
+                        Fluttertoast.showToast(
+                            msg:
+                                "Kullanıcı kaydı yapılamadığından devam edilemiyor");
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, "/home", (route) => false);
+                      }
+                    } else {
+                      Fluttertoast.showToast(msg: "Şifreniz eşleşmemektedir !");
+                    }
                   },
                   child: const Center(
                       child: Text(
@@ -77,7 +120,7 @@ class _SignUpState extends State<SignUp> {
         ));
   }
 
-  Color changeBackgroundColor() {
+  void changeBackgroundColor() {
     if ((textEditingControllerEmail.text.toString().isNotEmpty &&
         textEditingControllerPassword.text.toString().isNotEmpty &&
         textEditingControllerRePassword.text.toString().isNotEmpty)) {
@@ -89,7 +132,6 @@ class _SignUpState extends State<SignUp> {
         backgroundColor = Colors.grey;
       });
     }
-    return backgroundColor;
   }
 
   TextFormField emailFormField(
@@ -98,13 +140,15 @@ class _SignUpState extends State<SignUp> {
       controller: textEditingController,
       autocorrect: true,
       decoration: InputDecoration(
-          errorText: failInput,
           filled: true,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
               borderSide: const BorderSide(color: Colors.grey)),
           label: const Text("E-mail"),
           hintText: "abcdefgh@gmail.com"),
+      onChanged: (value) {
+        changeBackgroundColor();
+      },
     );
   }
 
@@ -124,7 +168,6 @@ class _SignUpState extends State<SignUp> {
               });
             },
           ),
-          errorText: failInput,
           filled: true,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
@@ -132,6 +175,9 @@ class _SignUpState extends State<SignUp> {
           label: const Text("Password"),
           hintText: "123456abcdef"),
       obscureText: obscureText,
+      onChanged: (value) {
+        changeBackgroundColor();
+      },
     );
   }
 
@@ -151,7 +197,6 @@ class _SignUpState extends State<SignUp> {
               });
             },
           ),
-          errorText: failInput,
           filled: true,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
@@ -159,6 +204,9 @@ class _SignUpState extends State<SignUp> {
           label: const Text("Password"),
           hintText: "123456abcdef"),
       obscureText: obscureText2,
+      onChanged: (value) {
+        changeBackgroundColor();
+      },
     );
   }
 }

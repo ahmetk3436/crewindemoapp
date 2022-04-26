@@ -20,7 +20,11 @@ class MyApp extends StatelessWidget {
       color: Colors.black26,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("Crewin Demo App"),
+          backgroundColor: Colors.white,
+          title: const Text(
+            "Crewin Demo App",
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         body: const Body(),
       ),

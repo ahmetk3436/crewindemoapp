@@ -60,19 +60,19 @@ class _SignInState extends State<SignIn> {
                         if (textEditingControllerEmail.text.isNotEmpty &&
                             textEditingControllerPassword.text.isNotEmpty) {
                           try {
-                            UserCredential userCredential = await FirebaseAuth
-                                .instance
+                            await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                     email: textEditingControllerEmail.text,
                                     password:
                                         textEditingControllerPassword.text);
+                            if (auth.currentUser != null) {
+                              Navigator.pushNamed(context, "/mainMenu");
+                            }
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'user-not-found') {
                               print('No user found for that email.');
                             } else if (e.code == 'wrong-password') {
                               print('Wrong password provided for that user.');
-                            } else {
-                              Navigator.pushNamed(context, "/mainMenu");
                             }
                           }
                         }
@@ -93,7 +93,6 @@ class _SignInState extends State<SignIn> {
       controller: textEditingControllerEmail,
       autocorrect: true,
       decoration: InputDecoration(
-          errorText: failInput,
           filled: true,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
@@ -119,7 +118,6 @@ class _SignInState extends State<SignIn> {
               });
             },
           ),
-          errorText: failInput,
           filled: true,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
