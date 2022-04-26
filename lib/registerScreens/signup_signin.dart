@@ -1,5 +1,5 @@
-import 'package:crewindemoproject/signIn.dart';
-import 'package:crewindemoproject/signUp.dart';
+import 'package:crewindemoproject/registerScreens/signIn.dart';
+import 'package:crewindemoproject/registerScreens/signUp.dart';
 import 'package:flutter/material.dart';
 
 class RegisterAndLogin extends StatelessWidget {

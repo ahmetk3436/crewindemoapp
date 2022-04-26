@@ -1,3 +1,4 @@
+import 'package:crewindemoproject/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -16,6 +17,7 @@ class _SignUpState extends State<SignUp> {
       TextEditingController();
   bool obscureText = true;
   bool obscureText2 = true;
+  Color backgroundColor = Colors.grey;
   @override
   Widget build(BuildContext context) {
     String failInput = "Hatalı giriş yapıldı";
@@ -54,13 +56,18 @@ class _SignUpState extends State<SignUp> {
           width: MediaQuery.of(context).size.width,
           child: Card(
               elevation: 8,
-              color: changeBackground(),
+              color: backgroundColor,
               child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(changeBackground())),
+                          MaterialStateProperty.all(changeBackgroundColor())),
                   onPressed: () {
-                    Navigator.pushNamed(context, "/signUpDetails");
+                    FirebaseAuthh authhh = FirebaseAuthh();
+                    authhh.registerFirebase(
+                        textEditingControllerEmail.text.toString(),
+                        textEditingControllerPassword.text.toString(),
+                        context);
+                    Navigator.pushNamed(context, "/name");
                   },
                   child: const Center(
                       child: Text(
@@ -70,16 +77,19 @@ class _SignUpState extends State<SignUp> {
         ));
   }
 
-  Color changeBackground() {
-    if ((textEditingControllerEmail.text.isNotEmpty &&
-            textEditingControllerPassword.text.isNotEmpty &&
-            textEditingControllerRePassword.text.isNotEmpty) &&
-        (textEditingControllerPassword.text ==
-            textEditingControllerRePassword.text)) {
-      return Colors.blue;
+  Color changeBackgroundColor() {
+    if ((textEditingControllerEmail.text.toString().isNotEmpty &&
+        textEditingControllerPassword.text.toString().isNotEmpty &&
+        textEditingControllerRePassword.text.toString().isNotEmpty)) {
+      setState(() {
+        backgroundColor = Colors.blue;
+      });
     } else {
-      return Colors.grey;
+      setState(() {
+        backgroundColor = Colors.grey;
+      });
     }
+    return backgroundColor;
   }
 
   TextFormField emailFormField(
@@ -101,6 +111,7 @@ class _SignUpState extends State<SignUp> {
   TextFormField passwordFormField(
       String failInput, TextEditingController textEditingController) {
     return TextFormField(
+      controller: textEditingControllerPassword,
       autocorrect: true,
       decoration: InputDecoration(
           suffixIcon: IconButton(
@@ -127,6 +138,7 @@ class _SignUpState extends State<SignUp> {
   TextFormField rewritePasswordFormField(
       String failInput, TextEditingController textEditingController) {
     return TextFormField(
+      controller: textEditingControllerRePassword,
       autocorrect: true,
       decoration: InputDecoration(
           suffixIcon: IconButton(

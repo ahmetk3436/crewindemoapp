@@ -1,9 +1,9 @@
 import 'package:crewindemoproject/Router/router.dart';
-import 'package:crewindemoproject/body.dart';
+import 'package:crewindemoproject/mainBody/body.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());

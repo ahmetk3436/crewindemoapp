@@ -1,19 +1,21 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:crewindemoproject/mainMenu.dart';
+import 'package:crewindemoproject/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import 'model/user.dart';
+import '../model/users.dart';
 
 class SignUpDetails extends StatefulWidget {
-  const SignUpDetails({Key? key}) : super(key: key);
-
+  const SignUpDetails({Key? key, required this.name}) : super(key: key);
+  final String name;
   @override
   State<SignUpDetails> createState() => _SignUpDetailsState();
 }
 
 class _SignUpDetailsState extends State<SignUpDetails> {
   final _controller = PageController(viewportFraction: 0.8, keepPage: true);
+  final FirebaseAuthh authh = FirebaseAuthh();
   Color femaleColor = Colors.grey;
   Color maleColor = Colors.grey;
   String userGender = "";
@@ -65,8 +67,17 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
                         onPressed: () {
-                          if (_controller.page == 3) {
-                            registerFirebase();
+                          if (activeIndex == 3) {
+                            userDetails.add(UserDetails(
+                                name: widget.name,
+                                height: _currentHeight,
+                                weight: _currentWeight,
+                                age: _currentAge,
+                                gender: userGender));
+                            authh.updateFirestore(widget.name, userGender,
+                                _currentHeight, _currentWeight, _currentAge);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, "/mainMenu", (route) => false);
                           } else {
                             _controller.nextPage(
                                 duration: const Duration(milliseconds: 500),
@@ -88,29 +99,6 @@ class _SignUpDetailsState extends State<SignUpDetails> {
         ),
       ),
     );
-  }
-
-  void registerFirebase() async {
-    try {
-      FirebaseAuth auth = FirebaseAuth.instance;
-      await auth
-          .createUserWithEmailAndPassword(
-              email: user.first.email, password: user.first.password);
-      userDetails.add(UserDetails(
-          height: _currentHeight,
-          weight: _currentWeight,
-          age: _currentAge,
-          gender: userGender));
-      Navigator.pushNamed(context, "/mainMenu");
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
   }
 
   Widget pages1() {

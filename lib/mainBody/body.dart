@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class Body extends StatelessWidget {
@@ -19,8 +18,6 @@ class Body extends StatelessWidget {
       ),
     );
   }
-
-  
 
   Align continueWithoutSigningUp() {
     return Align(
